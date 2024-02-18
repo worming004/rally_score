@@ -11,11 +11,12 @@ defmodule RallyScore.Application do
       RallyScoreWeb.Telemetry,
       RallyScore.Repo,
       {DNSCluster, query: Application.get_env(:rally_score, :dns_cluster_query) || :ignore},
-      {Phoenix.PubSub, name: RallyScore.PubSub},
+      {Phoenix.PubSub, name: RallyScore.PubSub, adapter: Phoenix.PubSub.PG2},
       # Start a worker by calling: RallyScore.Worker.start_link(arg)
       # {RallyScore.Worker, arg},
       # Start to serve requests, typically the last entry
-      RallyScoreWeb.Endpoint
+      RallyScoreWeb.Endpoint,
+      {RallyScore.AutoCounter, 0}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
