@@ -2,6 +2,7 @@ defmodule RallyScoreWeb.Router do
   use RallyScoreWeb, :router
 
   import RallyScoreWeb.UserAuth
+  import RallyScoreWeb.Role
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -79,6 +80,25 @@ defmodule RallyScoreWeb.Router do
       on_mount: [{RallyScoreWeb.UserAuth, :mount_current_user}] do
       live "/users/confirm/:token", UserConfirmationLive, :edit
       live "/users/confirm", UserConfirmationInstructionsLive, :new
+    end
+  end
+
+  scope "/", RallyScoreWeb do
+    pipe_through [:browser, :require_admin]
+
+    live "/challenges", ChallengeLive.Index, :index
+    live "/challenges/new", ChallengeLive.Index, :new
+    live "/challenges/:id/edit", ChallengeLive.Index, :edit
+
+    live "/challenges/:id", ChallengeLive.Show, :show
+    live "/challenges/:id/show/edit", ChallengeLive.Show, :edit
+  end
+
+  if Mix.env() == :dev do
+    scope "/dev" do
+      pipe_through [:browser]
+
+      forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end
 end

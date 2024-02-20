@@ -1,0 +1,27 @@
+<.header>
+  Challenge <%= @challenge.id %>
+  <:subtitle>This is a challenge record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/challenges/#{@challenge}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit challenge</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name"><%= @challenge.name %></:item>
+  <:item title="Order"><%= @challenge.order %></:item>
+</.list>
+
+<.back navigate={~p"/challenges"}>Back to challenges</.back>
+
+<.modal :if={@live_action == :edit} id="challenge-modal" show on_cancel={JS.patch(~p"/challenges/#{@challenge}")}>
+  <.live_component
+    module={RallyScoreWeb.ChallengeLive.FormComponent}
+    id={@challenge.id}
+    title={@page_title}
+    action={@live_action}
+    challenge={@challenge}
+    patch={~p"/challenges/#{@challenge}"}
+  />
+</.modal>
