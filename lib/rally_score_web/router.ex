@@ -84,7 +84,7 @@ defmodule RallyScoreWeb.Router do
   end
 
   scope "/", RallyScoreWeb do
-    pipe_through [:browser, :require_admin]
+    pipe_through [:browser, :require_admin_or_redirect]
 
     live "/challenges", ChallengeLive.Index, :index
     live "/challenges/new", ChallengeLive.Index, :new
